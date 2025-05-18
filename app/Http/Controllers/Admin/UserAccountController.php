@@ -59,7 +59,7 @@ class UserAccountController extends Controller
     public function bulkStore(BulkUserStoreRequest $request)
     {
         $data = $request->validated();
-        $createdUsers = [];
+       
     
         try {
             DB::beginTransaction();
@@ -83,8 +83,6 @@ class UserAccountController extends Controller
                     'dob' => $userData['dob'],
                     'address' => $userData['address'],
                 ]);
-    
-                $createdUsers[] = $user;
             }
             
             DB::commit();
