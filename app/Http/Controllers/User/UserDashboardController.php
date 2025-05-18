@@ -15,24 +15,27 @@ class UserDashboardController extends Controller
         $user = Auth::user();
         $account = $user->savingAccount;
 
-        $transactions = Transaction::with([
-            'senderAccount.user',
-            'receiverAccount.user',
-        ])
-        ->where(fn($query) => $query
+        $received = Transaction::with(['senderAccount.user'])
+            ->where('receiver_account_id', $account->id)
+            ->where('type', 'credit')
+            ->take(8)
+            ->get()
+            ->map(fn($tx) =>
+                new TransactionResource($tx, 'Received', 'From: ' . $tx->senderAccount->user?->name)
+            );
+
+        $sent = Transaction::with(['receiverAccount.user'])
             ->where('sender_account_id', $account->id)
-            ->orWhere('receiver_account_id', $account->id)
-        )
-        ->orderByDesc('created_at')
-        ->get()
-        ->groupBy('transaction_id')
-        ->take(10)
-        ->map(fn($group) => $group->firstWhere('sender_account_id', $account->id)
-            ?? $group->firstWhere('receiver_account_id', $account->id)
-        )
-        ->filter()
-        ->map(fn($tx) => TransactionResource::make($tx)->forAccount($account))
-        ->values();
+            ->where('type', 'debit')
+            ->take(8)
+            ->get()
+            ->map(fn($tx) =>
+                new TransactionResource($tx, 'Sent', 'To: ' . $tx->receiverAccount->user?->name)
+            );
+
+        $transactions = $received->merge($sent)
+            ->sortByDesc(fn($tx) => $tx->created_at)
+            ->values();
 
          return Inertia::render('User/Dashboard', [
             'user' => [

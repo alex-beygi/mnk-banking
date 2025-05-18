@@ -10,35 +10,28 @@ class TransactionResource extends JsonResource
     public static $wrap = null;
     protected $account;
 
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+    protected $type;
+    protected $description;
+
+    public function __construct($resource, $type, $description)
+    {
+        parent::__construct($resource);
+        $this->type = $type;
+        $this->description = $description;
+    }
+
     public function toArray($request)
     {
-        $account = $this->additional['account'] ?? null;
-        $isSender = $this->sender_account_id === $account?->id;
-
         return [
-            'id' => $this->id,
+            'id'             => $this->id,
             'transaction_id' => $this->transaction_id,
-            'type' => $isSender ? 'Sent' : 'Received',
-            'amount' => $this->amount,
-            'currency' => $this->currency,
-            'description' => $isSender
-                ? 'To: ' . optional($this->receiverAccount->user)?->name
-                : 'From: ' . optional($this->senderAccount->user)?->name,
-            'date' => $this->created_at->format('d/m/Y, H:i:s'),
+            'type'           => $this->type,
+            'amount'         => $this->amount,
+            'currency'       => $this->currency,
+            'description'    => $this->description,
+            'date'           => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
-
-    public function forAccount($account)
-    {
-        $this->account = $account;
-        return $this;
-    }
-
     public function boot(): void
     {
         JsonResource::withoutWrapping();
