@@ -1,6 +1,6 @@
 ## 💸 MNK International Banking System
 
-This is a modern, full-stack banking system built with Laravel, React, and TypeScript. It allows secure user account creation, transaction management, multi-currency transfers, and powerful admin controls.
+![Screenshot](https://ali-beygi.s3.eu-central-1.amazonaws.com/image.webp)
 
 ## 🚀 Features
 
