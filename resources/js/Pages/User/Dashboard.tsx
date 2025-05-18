@@ -44,7 +44,7 @@ export default function Dashboard({user,account,transactions}:DashboardProps) {
       console.log('🔔 New transaction received:', event.transaction);
        // Rerender page to get the latest transactions
        toast.success('💸 New transaction received!');
-       router.reload({ only: ['transactions'] });
+       router.reload({ only: ['transactions','account'] });
     });
   
     return () => {

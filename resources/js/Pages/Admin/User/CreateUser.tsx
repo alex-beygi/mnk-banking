@@ -56,8 +56,6 @@ const CreateUser: React.FC = () => {
         post(route('admin.users.bulk-store'), {
             onSuccess: () => {
                 reset();
-                setRows([{ first_name: '', last_name: '', email: '', dob: '', address: '' }]);
-                alert('Users created successfully!');
             },
         });
     };

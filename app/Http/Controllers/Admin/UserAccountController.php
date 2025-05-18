@@ -96,10 +96,7 @@ class UserAccountController extends Controller
             ], 500);
         }
     
-        return response()->json([
-            'message' => count($createdUsers) . ' users created successfully.',
-            'users' => $createdUsers,
-        ]);
+         return redirect()->route('admin.user-accounts');
         
     }
 }
