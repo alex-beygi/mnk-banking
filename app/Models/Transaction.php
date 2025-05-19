@@ -9,9 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+    // TODO: Replace 'currency' string with foreign key to currencies table for normalization
+    
     protected $fillable = [
-        'transaction_id', 'sender_account_id', 'receiver_account_id',
-        'amount', 'currency', 'description', 'type',
+        'transaction_id', 
+        'sender_account_id', 
+        'receiver_account_id',
+        'amount', 
+        'currency', // Will be replaced by currency_id
+        'description',
+        'type', 
     ];
 
     public function senderAccount()
