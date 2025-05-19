@@ -46,7 +46,7 @@ class UserDashboardController extends Controller
             ],
             'account' => [
                 'account_number' => $account->account_number ?? null,
-                'balance' => $account->balance ?? 0,
+                'balance' => $account->balance,
             ],
             'transactions' => $transactions,
         ]);
