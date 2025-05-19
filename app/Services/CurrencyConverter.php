@@ -47,10 +47,6 @@ class CurrencyConverter
                     'format' => 1,
                 ]);
     
-                if (!$response->ok() || !isset($response['rates'])) {
-                    throw new \Exception('Invalid API response structure.');
-                }
-    
                 return $response['rates'];
     
             } catch (\Throwable $e) {
