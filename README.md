@@ -1,4 +1,4 @@
-## 💸 MNK International Banking System
+x## 💸 MNK International Banking System
 
 ![Screenshot](https://ali-beygi.s3.eu-central-1.amazonaws.com/image.webp)
 
@@ -32,7 +32,6 @@
 ## 📥 User Dashboard
 	•	Personal and account details
 	•	Recent transactions (Sent or Received)
-	•	Polling every 5s for new transactions
 	•	Live notifications via Laravel Echo + toast messages
 
 ⸻
