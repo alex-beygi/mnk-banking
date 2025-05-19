@@ -61,34 +61,33 @@ class TransferController extends Controller
                 throw new \Exception('Insufficient funds in USD.');
             }
         
-            // 2. Debit sender in USD
-            $senderAccount->decrement('balance', $amountInUSD);
-        
-            Transaction::create([
-                'transaction_id'        => $sharedTransactionId,
-                'sender_account_id'     => $senderAccount->id,
-                'receiver_account_id'   => $recipientAccount->id,
-                'amount'                => $amount, // original currency amount
-                'currency'              => $selectedCurrency,
-                'type'                  => 'debit',
-                'description'           => "Sent to {$recipientAccount->account_number}",
-            ]);
-        
-            // 3. Credit recipient in USD (same amount as debited)
+           $senderAccount->decrement('balance', $amountInUSD);
+
+            $baseTransactionData = [
+                'transaction_id'      => $sharedTransactionId,
+                'sender_account_id'   => $senderAccount->id,
+                'receiver_account_id' => $recipientAccount->id,
+                'amount'              => $amount, // original currency amount
+                'currency'            => $selectedCurrency,
+            ];
+            
+            // Debit transaction (sender)
+            Transaction::create(array_merge($baseTransactionData, [
+                'type'        => 'debit',
+                'description' => "Sent to {$recipientAccount->account_number}",
+            ]));
+            
             $recipientAccount->increment('balance', $amountInUSD);
-        
-            $transaction =  Transaction::create([
-                'transaction_id'        => $sharedTransactionId,
-                'sender_account_id'     => $senderAccount->id,
-                'receiver_account_id'   => $recipientAccount->id,
-                'amount'                => $amount,
-                'currency'              => $selectedCurrency,
-                'type'                  => 'credit',
-                'description'           => "Received from {$senderAccount->account_number}",
-            ]);
+            
+            // Credit transaction (recipient)
+            $transaction = Transaction::create(array_merge($baseTransactionData, [
+                'type'        => 'credit',
+                'description' => "Received from {$senderAccount->account_number}",
+            ]));
             
             // Broadcast the transaction to the receiver
             broadcast(new TransactionMade($transaction, $recipientAccount->user_id));
+            
             DB::commit();
         
             return redirect()->back()->with('success', 'Transfer completed successfully.');
