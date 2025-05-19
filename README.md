@@ -1,4 +1,4 @@
-x## 💸 MNK International Banking System
+## 💸 MNK International Banking System
 
 ![Screenshot](https://ali-beygi.s3.eu-central-1.amazonaws.com/image.webp)
 
